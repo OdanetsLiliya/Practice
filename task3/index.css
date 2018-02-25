@@ -1,0 +1,334 @@
+html,
+body{
+    position: fixed;
+    top:0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+body{
+    display:flex;
+    overflow-y: visible;
+   flex-direction: column;
+   justify-content: space-between;
+}
+button,
+input{
+    outline: none;
+}
+.site-content{
+   display: flex;
+   justify-content: space-around;
+   flex: 1;
+}
+.text-type-mistral{
+    font-family: Mistral, cursive;
+    color: white;
+}
+.text-type-comic{
+    font-family: 'Comic Sans MS', 'Comic Sans', sans-serif;
+}
+p2{
+    font-size:60%;
+    color: white;
+}
+p3{
+    font-size: 80%;
+    color:black; 
+}
+p4{
+    font-size: 50%;
+    color:black;
+    max-width: 300px;
+}
+p5{
+    font-size: 80%;
+    color:white;
+}
+h1 {
+    font-size: 250%;
+    margin: 0;
+}
+h2 {
+    font-size: 100%;
+    text-align:center;
+    color: white;
+    margin: 0;
+}
+header {
+    display: flex;
+    background: #DB817B;
+    height: 40px;
+    min-width: 100%;
+    border-radius: 10px;
+    align-items: center;
+    justify-content:space-around;
+    white-space:nowrap;
+    text-align:justify;
+}
+.button{
+    background-color:transparent;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 35px;
+    width: 35px;
+    border: none;
+    border-radius: 50%;
+}
+.button:active{
+    box-shadow: inset 2px 2px 5px rgba(117, 4, 10, 0.98), 1px 1px 5px #C79191;   
+}
+.add {
+    background-image: url(image/buttonWrite1.png);
+}
+.search {
+    background-image: url(image/findButton.png); 
+}
+.delete {
+    background-image: url(image/deleteButton.png);
+    margin-top: 10px;
+}
+.text-button{
+     background-color: transparent;
+     border:none;
+     text-align:center;
+     text-decoration-line: underline;
+}
+.text-button:active{
+   color: rgb(216,18,0);
+}
+.log-button {
+    line-height:40px;
+    width: 70px;  
+    white-space:nowrap;
+    color: white;
+    font-size: 170%;
+    font-family: Mistral; 
+}
+.load-more-button{
+    margin-bottom: 40px;
+    color: black;
+    font-size: 80%;
+}
+.heart-shape{
+    border: none;
+    margin-top: 15px;
+	width: 20px;
+	height: 20px;
+	background-color: red;
+}
+.heart-shape:before{
+	position: absolute;
+	bottom: 0px;
+	left: -10px;
+	width: 20px;
+	height: 20px;
+	content: '';
+	-webkit-border-radius: 50%;
+	-moz-border-radius: 50%;
+	-o-border-radius: 50%;
+	border-radius: 50%;
+	background-color: red;
+}
+.heart-shape:after{
+	position: absolute;
+	top: -10px;
+	right: 0px;
+	width: 20px;
+	height: 20px;
+	content: '';
+	
+	-webkit-border-radius: 50%;
+	-moz-border-radius: 50%;
+	-o-border-radius: 50%;
+	border-radius: 50%;
+
+	background-color: red;
+}
+.heart-shape{
+	-webkit-transform: rotate(45deg);
+	-moz-transform: rotate(45deg);
+	-ms-transform: rotate(45deg);
+	-o-transform: rotate(45deg);
+	transform: rotate(45deg);
+}
+.heart-shape:active{
+    box-shadow: 0 0 20px rgba(216,18,0,0.6);
+    width: 19px;
+    height: 19px;
+}
+.filter-area {
+   
+    display: flex;
+    flex-direction: column;
+    align-items:center;
+    margin-top: 15px;
+    min-width: 220px;
+    min-height: 95px;
+    max-height: 90px;
+    border: 1px solid rgba(216,18,0,0.6);
+    border-radius: 10px;
+    padding: 5px;
+}
+.filter-area:last-of-type{
+    visibility: hidden;
+}
+.filter-input {
+    height: 20px;
+    border-radius: 10px;
+    max-width: 150px;
+    min-width: 100px;
+    width: 60vw;
+}
+.lent {
+    display: inline-block;
+    flex-direction: column;
+    overflow: scroll;
+    overflow-x: hidden;
+    text-align: center;
+    margin-top: 5px;
+    margin-bottom: 45px;
+    border-radius: 10px;
+    min-width: 400px;
+}
+.post {
+    display: flex;
+    margin-top: 10px;
+    margin-bottom: 40px;
+    background-color: rgba(219, 102, 102, 0.14);
+    border-radius: 10px;
+    padding: 1px;
+}
+.image {
+    width: 80vw;
+    height: 85vw;
+    max-height: 400px;    
+    max-width: 350px;
+    border-radius: 10px;
+}
+.input-area{
+    display: flex;
+    flex-direction: column;
+}
+.button-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: 5px;
+    height: 120px;
+    margin-bottom: 50px;
+    justify-content: space-between;
+}
+.image-area{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    border-radius: 10px;
+}
+.flex-box {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; 
+}
+footer {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    margin: 0;
+    padding: 0;
+    background: #DB817B;
+    height: 40px;
+    border-radius: 10px;
+    min-width: 100%;
+    justify-content: space-between;
+}
+@media screen and (max-width: 900px){
+  
+    .site-content{
+        flex-direction: column;
+        align-items: center;
+    }
+    .image{
+        max-height: 300px;
+        max-width: 250px;
+    }
+    .filter-area{
+        margin-right:0;
+        margin-top: 1px;  
+        padding: 0.5px;
+    }
+    .filter-area:last-of-type{
+        display: none;
+    }
+    .lent{
+        min-width: 100px;
+    }
+}
+@media screen and (max-width: 900px){
+     .filter-area:last-of-type{
+        display: none;
+    }
+}
+@media screen and (max-width: 600px){
+    p2{
+        display: none;
+    }  
+   
+}
+@media screen and (max-width: 400px){
+    h1{
+        font-size: 100%;
+    }
+    h2{
+        font-size: 80%;
+    }
+    .log-button{
+        width: 50px;
+        font-size: 90%;
+  }
+}
+@media screen and (max-height: 600px){
+    .image{
+        max-height: 300px;
+        max-width: 250px;
+    }
+}
+@media screen and (max-height: 300px){
+  .filter-area{
+    display: none;
+  }
+}
+::-webkit-scrollbar-button {
+    background-repeat:no-repeat;
+    width:7px;
+    height:0px
+    }
+    
+    ::-webkit-scrollbar-track {
+    background-color:#ecedee
+    }
+    
+    ::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 0px;
+    border-radius: 0px;
+    background-color:#DB817B;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover{
+    background-color:#DB817B;
+    }
+    
+    ::-webkit-resizer{
+    background-repeat:no-repeat;
+    width:7px;
+    height:0px
+    }
+    
+    ::-webkit-scrollbar{
+    width: 7px;
+    }
