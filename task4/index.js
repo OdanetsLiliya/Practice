@@ -281,7 +281,7 @@ let modul = (function () {
   };
 
   let getPhotoPost = function (id) {
-    return photoPosts.find(item => item.id == id);
+    return photoPosts.find(item => item.id === id);
   };
 
   let addPhotoPost = function (photoPost) {
@@ -298,14 +298,16 @@ let modul = (function () {
       return false;
     }
 
-    if (photoPost.description && typeof (photoPost.description) == 'string' &&
-      photoPost.description.length <= 200 &&
-      photoPost.photoLink && typeof (photoPost.photoLink) == 'string' && photoPost.photoLink.length != 0 &&
+    if ((statusOfValidation && !photoPost.description || photoPost.description &&
+      typeof (photoPost.description) == 'string' &&
+      photoPost.description.length <= 200) &&
+      (statusOfValidation && !photoPost.photoLink ||
+        photoPost.photoLink && typeof (photoPost.photoLink) == 'string' && photoPost.photoLink.length != 0) &&
       (typeof (photoPost.hashtags) == 'undefined' || validTypeOfArray(photoPost.hashtags)) &&
       (statusOfValidation ||
         photoPost.id && photoPosts.findIndex(item => item.id == photoPost.id) == -1 &&
         typeof (photoPost.id) == 'string' &&
-        photoPost.Date && photoPost.createdAt instanceof Date &&
+        photoPost.createdAt && photoPost.createdAt instanceof Date &&
         typeof (photoPost.author) == 'string' && photoPost.author.length != 0 &&
         (typeof (photoPost.likes) == 'undefined' || validTypeOfArray(photoPost.likes))
       )
@@ -317,7 +319,7 @@ let modul = (function () {
 
   let editPhotoPost = function (id, photoPost) {
     let photopostToChange = this.getPhotoPost(id);
-    if (typeof (photopostToChange) == 'undefined') {
+    if (typeof (photopostToChange) == 'undefined' || !validatePhotoPost(photoPost, 'changes')) {
       return false;
     }
     if (photoPost.description) {
@@ -329,15 +331,12 @@ let modul = (function () {
     if (photoPost.hashtags) {
       photopostToChange.hashtags = photoPost.hashtags;
     }
-    if (validatePhotoPost(photopostToChange, 'changes')) {
-      photoPosts[photoPosts.findIndex(item => item.id == id)] = photopostToChange;
-      return true;
-    }
-    return false;
+    photoPosts[photoPosts.findIndex(item => item.id === id)] = photopostToChange;
+    return true;
   };
 
   let removePhotoPost = function (id) {
-    let index = photoPosts.findIndex(item => item.id == id);
+    let index = photoPosts.findIndex(item => item.id === id);
     if (index != -1) {
       photoPosts.splice(index, 1);
       return true;
@@ -346,11 +345,11 @@ let modul = (function () {
   }
 
   return {
-    getPhotoPost: getPhotoPost,
-    getPhotoPosts: getPhotoPosts,
-    addPhotoPost: addPhotoPost,
-    editPhotoPost: editPhotoPost,
-    removePhotoPost: removePhotoPost
+    getPhotoPost,
+    getPhotoPosts,
+    addPhotoPost,
+    editPhotoPost,
+    removePhotoPost
   }
 })();
 
@@ -358,10 +357,10 @@ console.log('array of photoposts:')
 console.log(photoPosts);
 
 console.log('check mehtod getPhotoPost');
-console.log('getPhotopost(3)');
-console.log(modul.getPhotoPost(3));
-console.log('getPhotopost(2)');
-console.log(modul.getPhotoPost(2));
+console.log("getPhotopost('3')");
+console.log(modul.getPhotoPost('3'));
+console.log("getPhotopost('2')");
+console.log(modul.getPhotoPost('2'));
 console.log('getPhotopost(100) no such id');
 console.log(modul.getPhotoPost('100'));
 console.log("getPhotopost(['1', '4']) wrong type of arg");
@@ -410,6 +409,8 @@ console.log("edit id=2(not exist) description: 'new description', hashtags: ['#s
 console.log(modul.editPhotoPost('2', { description: 'new description', hashtags: ['#summer'] }));
 console.log("edit id=3 description: 'new description', hashtags: ['#summer']");
 console.log(modul.editPhotoPost('3', { description: 'new description', hashtags: ['#summer'] }));
+console.log("modul.editPhotoPost('1', { description: 'a', photoLink: 2 })");
+console.log(modul.editPhotoPost('1', { description: 'a', photoLink: 2 }));
 
 console.log('array of photoposts after:');
 console.log(photoPosts);
