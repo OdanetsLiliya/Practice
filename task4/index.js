@@ -244,11 +244,11 @@ let modul = (function () {
 
   let getPhotoPosts = function (skip, top, filterConfig) {
     let posts = photoPosts;
-    if (typeof (skip) != 'number' || typeof (top) != 'number') {
+    if (typeof (skip) !== 'number' || typeof (top) !== 'number') {
       return [];
     }
     if (filterConfig) {
-      if (filterConfig.author && (typeof (filterConfig.author) != 'string' || filterConfig.author.length === 0) ||
+      if (filterConfig.author && (typeof (filterConfig.author) !== 'string' || filterConfig.author.length === 0) ||
         filterConfig.createdAt && !filterConfig.createdAt instanceof Date ||
         filterConfig.hashtags && !validTypeOfArray(filterConfig.hashtags)) {
         return [];
@@ -302,13 +302,13 @@ let modul = (function () {
       typeof (photoPost.description) === 'string' &&
       photoPost.description.length <= 200) &&
       (statusOfValidation && !photoPost.photoLink ||
-        photoPost.photoLink && typeof (photoPost.photoLink) === 'string' && photoPost.photoLink.length != 0) &&
+        photoPost.photoLink && typeof (photoPost.photoLink) === 'string' && photoPost.photoLink.length !== 0) &&
       (typeof (photoPost.hashtags) === 'undefined' || validTypeOfArray(photoPost.hashtags)) &&
       (statusOfValidation ||
         photoPost.id && photoPosts.findIndex(item => item.id === photoPost.id) === -1 &&
         typeof (photoPost.id) === 'string' &&
         photoPost.createdAt && photoPost.createdAt instanceof Date &&
-        typeof (photoPost.author) === 'string' && photoPost.author.length != 0 &&
+        typeof (photoPost.author) === 'string' && photoPost.author.length !== 0 &&
         (typeof (photoPost.likes) === 'undefined' || validTypeOfArray(photoPost.likes))
       )
     ) {
@@ -337,7 +337,7 @@ let modul = (function () {
 
   let removePhotoPost = function (id) {
     let index = photoPosts.findIndex(item => item.id === id);
-    if (index != -1) {
+    if (index !== -1) {
       photoPosts.splice(index, 1);
       return true;
     }
