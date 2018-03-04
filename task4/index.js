@@ -236,7 +236,7 @@ let modul = (function () {
   function validTypeOfArray(array) {
     if (Array.isArray(array)) {
       return array.every(function (item) {
-        return typeof (item) == 'string';
+        return typeof (item) === 'string';
       });
     }
     return false;
@@ -248,7 +248,7 @@ let modul = (function () {
       return [];
     }
     if (filterConfig) {
-      if (filterConfig.author && (typeof (filterConfig.author) != 'string' || filterConfig.author.length == 0) ||
+      if (filterConfig.author && (typeof (filterConfig.author) != 'string' || filterConfig.author.length === 0) ||
         filterConfig.createdAt && !filterConfig.createdAt instanceof Date ||
         filterConfig.hashtags && !validTypeOfArray(filterConfig.hashtags)) {
         return [];
@@ -261,13 +261,13 @@ let modul = (function () {
 
       if (filterConfig.createdAt) {
         posts = posts.filter(function (item) {
-          return Date.parse(item.createdAt) == Date.parse(filterConfig.createdAt);
+          return Date.parse(item.createdAt) === Date.parse(filterConfig.createdAt);
         });
       }
 
       if (filterConfig.hashtags) {
         posts = posts.filter(function (postItem) {
-          if (typeof (postItem.hashtags) == 'undefined') {
+          if (typeof (postItem.hashtags) === 'undefined') {
             return false;
           }
           return filterConfig.hashtags.every(function (item) {
@@ -299,17 +299,17 @@ let modul = (function () {
     }
 
     if ((statusOfValidation && !photoPost.description || photoPost.description &&
-      typeof (photoPost.description) == 'string' &&
+      typeof (photoPost.description) === 'string' &&
       photoPost.description.length <= 200) &&
       (statusOfValidation && !photoPost.photoLink ||
-        photoPost.photoLink && typeof (photoPost.photoLink) == 'string' && photoPost.photoLink.length != 0) &&
-      (typeof (photoPost.hashtags) == 'undefined' || validTypeOfArray(photoPost.hashtags)) &&
+        photoPost.photoLink && typeof (photoPost.photoLink) === 'string' && photoPost.photoLink.length != 0) &&
+      (typeof (photoPost.hashtags) === 'undefined' || validTypeOfArray(photoPost.hashtags)) &&
       (statusOfValidation ||
-        photoPost.id && photoPosts.findIndex(item => item.id == photoPost.id) == -1 &&
-        typeof (photoPost.id) == 'string' &&
+        photoPost.id && photoPosts.findIndex(item => item.id === photoPost.id) === -1 &&
+        typeof (photoPost.id) === 'string' &&
         photoPost.createdAt && photoPost.createdAt instanceof Date &&
-        typeof (photoPost.author) == 'string' && photoPost.author.length != 0 &&
-        (typeof (photoPost.likes) == 'undefined' || validTypeOfArray(photoPost.likes))
+        typeof (photoPost.author) === 'string' && photoPost.author.length != 0 &&
+        (typeof (photoPost.likes) === 'undefined' || validTypeOfArray(photoPost.likes))
       )
     ) {
       return true;
@@ -319,7 +319,7 @@ let modul = (function () {
 
   let editPhotoPost = function (id, photoPost) {
     let photopostToChange = this.getPhotoPost(id);
-    if (typeof (photopostToChange) == 'undefined' || !validatePhotoPost(photoPost, 'changes')) {
+    if (typeof (photopostToChange) === 'undefined' || !validatePhotoPost(photoPost, 'changes')) {
       return false;
     }
     if (photoPost.description) {
