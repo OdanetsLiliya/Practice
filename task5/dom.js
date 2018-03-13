@@ -1,15 +1,15 @@
 let user = 'lily';
-let filterConfig = { author: 'ivan' };
+let filterConfig = { author: 'lilil' };
 let loadMoreButton = document.querySelector('.load-more-button');
+let lent = document.querySelector('.lent');
 
 window.dom = (function () {
-    let lent = document.querySelector('.lent');
     loadMoreButton.style.visibility = 'hidden';
     let userName = document.querySelector('h2');
     let logButton = document.querySelector('.log-button');
     if (user != null) {
         logButton.innerHTML = 'log out';
-        userName.innerHTML = 'lily';
+        userName.innerHTML = user;
     } else {
         logButton.innerHTML = 'log in';
         document.querySelector('.add-the-post').style.visibility = 'hidden';
@@ -60,7 +60,7 @@ window.dom = (function () {
         return post;
     }
     let addPhotoPost = function (photoPost) {
-        lent.insertBefore(makePhotoPost(photoPost), loadMoreButton);
+        lent.insertBefore(makePhotoPost(photoPost), lent.children[0]);
     }
     let getPhotoPosts = function (skip = 0, top = 10, filterConfig) {
         let photoPosts = modul.getPhotoPosts(skip, top, filterConfig);
@@ -102,6 +102,9 @@ function showPhotoPosts(skip, top) {
     dom.deleteAllPosts();
     dom.getPhotoPosts(skip, top, filterConfig);
     posts = modul.getPhotoPosts(0, photoPosts.length, filterConfig).length;
+    //if (posts === 0) {
+    //    lent.innerHTML = 'No such posts';
+    //}
     if (skip + top >= posts) {
         loadMoreButton.style.visibility = 'hidden';
     } else {
@@ -109,21 +112,27 @@ function showPhotoPosts(skip, top) {
     }
 }
 function addPhotoPost(photoPost, skip, top) {
-    if (modul.addPhotoPost(photoPost)) {
-        dom.deleteAllPosts();
-        showPhotoPosts(skip, top, filterConfig);
-        return true;
+    if (user != null) {
+        if (modul.addPhotoPost(photoPost)) {
+            dom.addPhotoPost(photoPost);
+            // dom.deleteAllPosts();
+            // showPhotoPosts(skip, top, filterConfig);
+            return true;
+        }
     }
     return false;
 }
 function editPhotoPost(id, photoPost) {
+    //if (modul.getPhotoPost(id).author === user) {
     if (modul.editPhotoPost(id, photoPost)) {
         dom.editPhotoPost(id, photoPost);
         return true;
     }
+    //}
     return false;
 }
 function removePhotoPost(id) {
+    //if (modul.getPhotoPost(id).author == user) {
     if (modul.removePhotoPost(id)) {
         if (dom.removePhotoPost(id)) {
             let length = document.getElementsByClassName('post').length;
@@ -137,14 +146,15 @@ function removePhotoPost(id) {
         }
         return true;
     }
+    //}
     return false;
 }
 loadMoreButton.addEventListener('click', function () {
     let length = document.getElementsByClassName('post').length;
     let posts = modul.getPhotoPosts(0, photoPosts.length, filterConfig);
     if (posts.length > length) {
-        dom.getPhotoPosts(length, 1, filterConfig);
-        if (posts.length === length + 1) {
+        dom.getPhotoPosts(length, 10, filterConfig);
+        if (posts.length <= length + 10) {
             loadMoreButton.style.visibility = 'hidden';
         }
     }
