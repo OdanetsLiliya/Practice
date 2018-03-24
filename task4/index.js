@@ -1,135 +1,20 @@
-let photoPosts = [
-  {
-    id: '1',
-    description: 'Женская сборная Беларуси выиграла эстафету в рамках соревнований по биатлону на Олимпийских играх в Пхёнчхане!!!',
-    createdAt: new Date('2018-02-23'),
-    author: 'lily',
-    photoLink: 'https://cs1.livemaster.ru/articlefoto/300x225/e/8/f/e8faafd936.jpg',
-    hashtags: ['#hashtag', '#summer'],
-    likes: ['nick_name1', 'nick_name2']
-  },
-  {
-    id: '2',
-    description: 'Женская сборная Беларуси выиграла эстафету в рамках соревнований по биатлону на Олимпийских играх в Пхёнчхане!!!',
-    createdAt: new Date('2018-02-23'),
-    author: 'Иванов Иван',
-    photoLink: 'https://cs1.livemaster.ru/articlefoto/300x225/e/8/f/e8faafd936.jpg',
-    hashtags: ['#hashtag', '#summer'],
-    likes: ['nick_name1', 'nick_name2']
-  },
-  {
-    id: '3',
-    description: 'Женская сборная Беларуси выиграла эстафету в рамках соревнований по биатлону на Олимпийских играх в Пхёнчхане!!!',
-    createdAt: new Date('2018-02-23'),
-    author: 'ivan',
-    photoLink: 'https://cs1.livemaster.ru/articlefoto/300x225/e/8/f/e8faafd936.jpg',
-    hashtags: ['#hashtag', '#summer'],
-    likes: ['nick_name1', 'nick_name2']
-  },
-  {
-    id: '4',
-    description: 'Женская сборная Беларуси выиграла эстафету в рамках соревнований по биатлону на Олимпийских играх в Пхёнчхане!!!',
-    createdAt: new Date('2018-03-23'),
-    author: 'lily',
-    photoLink: 'https://cs1.livemaster.ru/articlefoto/300x225/e/8/f/e8faafd936.jpg',
-    hashtags: ['#hashtag', '#summer'],
-    likes: ['nick_name1', 'nick_name2']
-  },
-  {
-    id: '5',
-    description: 'Женская сборная Беларуси выиграла эстафету в рамках соревнований по биатлону на Олимпийских играх в Пхёнчхане!!!',
-    createdAt: new Date('2017-02-02'),
-    author: 'ivan',
-    photoLink: 'https://cs1.livemaster.ru/articlefoto/300x225/e/8/f/e8faafd936.jpg',
-    hashtags: ['#hashtag', '#summer', '#kek'],
-    likes: ['nick_name1', 'nick_name2']
-  },
-  {
-    id: '6',
-    description: 'Женская сборная Беларуси выиграла эстафету в рамках соревнований по биатлону на Олимпийских играх в Пхёнчхане!!!',
-    createdAt: new Date('2017-02-20'),
-    author: 'ivan',
-    photoLink: 'https://cs1.livemaster.ru/articlefoto/300x225/e/8/f/e8faafd936.jpg',
-    hashtags: ['#hashtag', '#summer', '#kek'],
-    likes: ['nick_name1', 'nick_name2']
-  },
-  {
-    id: '7',
-    description: 'Женская сборная Беларуси выиграла эстафету в рамках соревнований по биатлону на Олимпийских играх в Пхёнчхане!!!',
-    createdAt: new Date('2017-02-20'),
-    author: 'ivan',
-    photoLink: 'https://im0-tub-by.yandex.net/i?id=b10d45533ed1f40e6a29b6f586fb4c04-l&n=13',
-    hashtags: ['#hashtag', '#summer', '#kek'],
-    likes: ['nick_name1', 'nick_name2']
-  },
-  {
-    id: '8',
-    description: 'Женская сборная Беларуси выиграла эстафету в рамках соревнований по биатлону на Олимпийских играх в Пхёнчхане!!!',
-    createdAt: new Date('2017-02-20'),
-    author: 'ivan',
-    photoLink: 'https://cs1.livemaster.ru/articlefoto/300x225/e/8/f/e8faafd936.jpg',
-    hashtags: ['#hashtag', '#summer', '#kek'],
-    likes: ['nick_name1', 'nick_name2']
-  },
-  {
-    id: '9',
-    description: 'Женская сборная Беларуси выиграла эстафету в рамках соревнований по биатлону на Олимпийских играх в Пхёнчхане!!!',
-    createdAt: new Date('2017-02-20'),
-    author: 'ivan',
-    photoLink: 'https://cs1.livemaster.ru/articlefoto/300x225/e/8/f/e8faafd936.jpg',
-    hashtags: ['#hashtag', '#summer', '#kek'],
-    likes: ['nick_name1', 'nick_name2']
-  },
-  {
-    id: '10',
-    description: 'Женская сборная Беларуси выиграла эстафету в рамках соревнований по биатлону на Олимпийских играх в Пхёнчхане!!!',
-    createdAt: new Date('2017-01-11'),
-    author: 'lily',
-    photoLink: 'https://cs1.livemaster.ru/articlefoto/300x225/e/8/f/e8faafd936.jpg',
-    hashtags: ['#hashtag', '#summer', '#kek'],
-    likes: ['nick_name1', 'nick_name2']
-  },
-  {
-    id: '11',
-    description: 'Женская сборная Беларуси выиграла эстафету в рамках соревнований по биатлону на Олимпийских играх в Пхёнчхане!!!',
-    createdAt: new Date('2017-02-20'),
-    author: 'ivan',
-    photoLink: 'https://cs1.livemaster.ru/articlefoto/300x225/e/8/f/e8faafd936.jpg',
-    hashtags: ['#hashtag', '#summer', '#kek'],
-    likes: ['nick_name1', 'nick_name2']
-  },
-  {
-    id: '12',
-    description: 'Женская сборная Беларуси выиграла эстафету в рамках соревнований по биатлону на Олимпийских играх в Пхёнчхане!!!',
-    createdAt: new Date('2017-01-11'),
-    author: 'ivan',
-    photoLink: 'https://cs1.livemaster.ru/articlefoto/300x225/e/8/f/e8faafd936.jpg',
-    hashtags: ['#hashtag', '#summer', '#kek'],
-    likes: ['nick_name1', 'nick_name2']
-  },
-  {
-    id: '13',
-    description: 'Женская сборная Беларуси выиграла эстафету в рамках соревнований по биатлону на Олимпийских играх в Пхёнчхане!!!',
-    createdAt: new Date('2017-02-20'),
-    author: 'ivan',
-    photoLink: 'https://cs1.livemaster.ru/articlefoto/300x225/e/8/f/e8faafd936.jpg',
-    hashtags: ['#hashtag', '#summer', '#kek'],
-    likes: ['nick_name1', 'nick_name2']
-  },
-  {
-    id: '14',
-    description: 'Женская сборная Беларуси выиграла эстафету в рамках соревнований по биатлону на Олимпийских играх в Пхёнчхане!!!',
-    createdAt: new Date('2017-01-11'),
-    author: 'ivan',
-    photoLink: 'https://cs1.livemaster.ru/articlefoto/300x225/e/8/f/e8faafd936.jpg',
-    hashtags: ['#hashtag', '#summer', '#kek'],
-    likes: ['nick_name1', 'nick_name2']
-  }
+let users = [{
+  name: "lili",
+  password: "q"
+},
+{
+  name: "ivan",
+  password: "1234"
+},
+{
+  name: "alex",
+  password: "111111"
+}
 ];
 window.modul =
   (function () {
 
-    photoPosts.sort(compareByDate);
+    //photoPosts.sort(compareByDate);
 
     function compareByDate(photoPostA, photoPostB) {
       return Date.parse(photoPostB.createdAt) - Date.parse(photoPostA.createdAt);
@@ -145,7 +30,16 @@ window.modul =
     }
 
     let getPhotoPosts = function (skip, top, filterConfig) {
-      let posts = photoPosts;
+      let i = 0;
+      let posts = Object.keys(localStorage).reduce((posts, k) => {
+        posts[i] = JSON.parse(localStorage.getItem(k), function (key, value) {
+          if (key == 'createdAt') return new Date(value);
+          return value;
+        });
+        i++;
+        return posts;
+      }, []);
+      console.log(posts);
       if (typeof (skip) !== 'number' || typeof (top) !== 'number') {
         return [];
       }
@@ -183,13 +77,15 @@ window.modul =
     };
 
     let getPhotoPost = function (id) {
-      return photoPosts.find(item => item.id === id);
+      // return photoPosts.find(item => item.id === id);
+      return JSON.parse(localStorage.getItem(id));
     };
 
     let addPhotoPost = function (photoPost) {
       if (validatePhotoPost(photoPost)) {
-        photoPosts.push(photoPost);
-        photoPosts.sort(compareByDate);
+        //photoPosts.push(photoPost);
+        //photoPosts.sort(compareByDate);
+        localStorage.setItem(photoPost.id, JSON.stringify(photoPost));
         return true;
       }
       return false;
@@ -199,7 +95,6 @@ window.modul =
       if (!photoPost) {
         return false;
       }
-
       if ((statusOfValidation && !photoPost.description || photoPost.description &&
         typeof (photoPost.description) === 'string' &&
         photoPost.description.length <= 200) &&
@@ -207,13 +102,13 @@ window.modul =
           photoPost.photoLink && typeof (photoPost.photoLink) === 'string' && photoPost.photoLink.length !== 0) &&
         (typeof (photoPost.hashtags) === 'undefined' || validTypeOfArray(photoPost.hashtags)) &&
         (statusOfValidation ||
-          photoPost.id && photoPosts.findIndex(item => item.id === photoPost.id) === -1 &&
+          (photoPost.id && localStorage.getItem(photoPost.id)) === null
+          /*findIndex(item => item.id === photoPost.id) === -1*/ &&
           typeof (photoPost.id) === 'string' &&
           photoPost.createdAt && photoPost.createdAt instanceof Date &&
           typeof (photoPost.author) === 'string' && photoPost.author.length !== 0 &&
           (typeof (photoPost.likes) === 'undefined' || validTypeOfArray(photoPost.likes))
-        )
-      ) {
+        )) {
         return true;
       }
       return false;
@@ -233,14 +128,15 @@ window.modul =
       if (photoPost.hashtags) {
         photopostToChange.hashtags = photoPost.hashtags;
       }
-      photoPosts[photoPosts.findIndex(item => item.id === id)] = photopostToChange;
+      localStorage.setItem(id, JSON.stringify(photopostToChange));
+      //photoPosts[photoPosts.findIndex(item => item.id === id)] = photopostToChange;
       return true;
     };
 
     let removePhotoPost = function (id) {
-      let index = photoPosts.findIndex(item => item.id === id);
-      if (index !== -1) {
-        photoPosts.splice(index, 1);
+      //let index = photoPosts.findIndex(item => item.id === id);
+      if (localStorage.getItem(id)) {
+        localStorage.removeItem(id)
         return true;
       }
       return false;

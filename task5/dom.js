@@ -1,20 +1,10 @@
-let user = 'lily';
-let filterConfig = { author: 'lilil' };
-let loadMoreButton = document.querySelector('.load-more-button');
-let lent = document.querySelector('.lent');
-
+//let user = null;
+let filterConfig = null;
+let user = null;
 window.dom = (function () {
-    loadMoreButton.style.visibility = 'hidden';
+    document.querySelector('.load-more-button').style.visibility = 'hidden';
     let userName = document.querySelector('h2');
     let logButton = document.querySelector('.log-button');
-    if (user != null) {
-        logButton.innerHTML = 'log out';
-        userName.innerHTML = user;
-    } else {
-        logButton.innerHTML = 'log in';
-        document.querySelector('.add-the-post').style.visibility = 'hidden';
-        userName.style.visibility = 'hidden';
-    }
     let makePhotoPost = function (photoPost) {
         let post = document.createElement('div');
         let image = document.createElement('img');
@@ -60,16 +50,19 @@ window.dom = (function () {
         return post;
     }
     let addPhotoPost = function (photoPost) {
+        console.log(photoPost);
+        let lent = document.querySelector('.lent');
         lent.insertBefore(makePhotoPost(photoPost), lent.children[0]);
     }
     let getPhotoPosts = function (skip = 0, top = 10, filterConfig) {
         let photoPosts = modul.getPhotoPosts(skip, top, filterConfig);
-        photoPosts.forEach(item => { lent.insertBefore(makePhotoPost(item), loadMoreButton) });
+        console.log(photoPosts);
+        photoPosts.forEach(item => { document.querySelector('.lent').insertBefore(makePhotoPost(item), document.querySelector('.load-more-button')) });
     }
     let editPhotoPost = function (id, photoPost) {
         let post = document.getElementById(id);
         if (post) {
-            lent.replaceChild(makePhotoPost(modul.getPhotoPost(id)), post);
+            document.querySelector('.lent').replaceChild(makePhotoPost(modul.getPhotoPost(id)), post);
             return true;
         }
         return false;
@@ -77,7 +70,7 @@ window.dom = (function () {
     let removePhotoPost = function (id) {
         let post = document.getElementById(id);
         if (post) {
-            lent.removeChild(post);
+            document.querySelector('.lent').removeChild(post);
             return true;
         }
         return false;
@@ -86,7 +79,7 @@ window.dom = (function () {
         let items = document.getElementsByClassName('post');
         items = Array.prototype.slice.call(items);
         items.forEach(function (item) {
-            lent.removeChild(document.getElementById(item.id));
+            document.querySelector('.lent').removeChild(document.getElementById(item.id));
         });
         return true;
     }
@@ -101,17 +94,17 @@ window.dom = (function () {
 function showPhotoPosts(skip, top) {
     dom.deleteAllPosts();
     dom.getPhotoPosts(skip, top, filterConfig);
-    posts = modul.getPhotoPosts(0, photoPosts.length, filterConfig).length;
+    posts = modul.getPhotoPosts(0, localStorage.length, filterConfig).length;
     //if (posts === 0) {
     //    lent.innerHTML = 'No such posts';
     //}
     if (skip + top >= posts) {
-        loadMoreButton.style.visibility = 'hidden';
+        document.querySelector('.load-more-button').style.visibility = 'hidden';
     } else {
-        loadMoreButton.style.visibility = 'visible';
+        document.querySelector('.load-more-button').style.visibility = 'visible';
     }
 }
-function addPhotoPost(photoPost, skip, top) {
+function addPhotoPost(photoPost) {
     if (user != null) {
         if (modul.addPhotoPost(photoPost)) {
             dom.addPhotoPost(photoPost);
@@ -141,7 +134,7 @@ function removePhotoPost(id) {
                 dom.addPhotoPost(posts[length]);
             }
             if (length + 1 >= posts.length) {
-                loadMoreButton.style.visibility = 'hidden';
+                document.querySelector('.load-more-button').style.visibility = 'hidden';
             }
         }
         return true;
@@ -149,13 +142,15 @@ function removePhotoPost(id) {
     //}
     return false;
 }
-loadMoreButton.addEventListener('click', function () {
-    let length = document.getElementsByClassName('post').length;
-    let posts = modul.getPhotoPosts(0, photoPosts.length, filterConfig);
-    if (posts.length > length) {
-        dom.getPhotoPosts(length, 10, filterConfig);
-        if (posts.length <= length + 10) {
-            loadMoreButton.style.visibility = 'hidden';
+function lol() {
+    document.querySelector('.load-more-button').addEventListener('click', function () {
+        let length = document.getElementsByClassName('post').length;
+        let posts = modul.getPhotoPosts(0, localStorage.length, filterConfig);
+        if (posts.length > length) {
+            dom.getPhotoPosts(length, 10, filterConfig);
+            if (posts.length <= length + 10) {
+                document.querySelector('.load-more-button').style.visibility = 'hidden';
+            }
         }
-    }
-});
+    });
+}
