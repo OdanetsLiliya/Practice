@@ -40,7 +40,7 @@ let addThePostHtml = "    <form class='add-the-post-form'>\
              <textarea class='textarea-input' type='text' maxlength='400' rows='6'></textarea>\
              <p3 class='text-type-comic'>Add some hashtags:</p3>\
              <textarea class='textarea-input' type='text' maxlength='20' rows='3'></textarea>\
-             <p3 class='text-type-comic'>Date:00.00.0000</p3>\
+             <p3 class='text-type-comic'></p3>\
          </div>\
          <button class='button send-button' type='button' onclick='sendPost()'></button>\
      </form>";
@@ -57,42 +57,45 @@ let editThePostHtml = "    <form class='add-the-post-form'>\
 
 function changePage(htmlInfo) {
     main.innerHTML = htmlInfo;
-    addListeners();
-}
+    //addListeners();
+};
 
 function addListeners() {
-    if (currentPage == 'main') {
-        headerButton.addEventListener('click', function () {
-            if (headerButton.textContent === 'log in') {
-                currentPage = 'log in';
-                changePage(logInPageHtml);
-                headerButton.style.visibility = 'hidden';
-                addThePostHeader.style.visibility = 'hidden';
-            } else if (headerButton.textContent === 'log out') {
-                user = null;
-                addThePostHeader.style.visibility = 'hidden';
-                headerButton.textContent = "log in";
-                document.querySelector('h2.text-type-comic').textContent = '';
-                showPhotoPosts(0, 10);
-            }
-        });
+    //if (currentPage == 'main') {
+    // headerButton.addEventListener('click', function () {
+    if (headerButton.textContent === 'log in') {
+        currentPage = 'log in';
+        changePage(logInPageHtml);
+        headerButton.style.visibility = 'hidden';
+        addThePostHeader.style.visibility = 'hidden';
+    } else if (headerButton.textContent === 'log out') {
+        user = null;
+        currentPage = 'main';
+        addThePostHeader.style.visibility = 'hidden';
+        headerButton.textContent = "log in";
+        document.querySelector('h2.text-type-comic').textContent = '';
+        // showPhotoPosts(0, 10);
     }
-    else if (currentPage == 'log in' || currentPage == 'add the post' || currentPage == 'edit post') {
-        document.querySelector('h1.text-type-mistral').addEventListener('click', function () {
-            currentPage = 'main';
-            changePage(mainPageHtml);
-            showPhotoPosts(0, 10);
-            eventsForLent();
-            eventForLoadMore();
-            headerButton.style.visibility = '';
-        });
-    }
+    //});
+    //}
+    //else if (currentPage == 'log in' || currentPage == 'add the post' || currentPage == 'edit post') {
+    /*document.querySelector('h1.text-type-mistral').addEventListener('click', function () {
+        
+    });*/
+    //}
+};
+function homePage() {
+    currentPage = 'main';
+    changePage(mainPageHtml);
+    showPhotoPosts(0, 10);
+    eventsForLent();
+    eventForLoadMore();
+    headerButton.style.visibility = '';
 }
-
 showPhotoPosts(0, 10);
 eventsForLent();
 eventForLoadMore();
-addListeners();
+//addListeners();
 
 function logIn() {
     let form = document.querySelector("form");
@@ -100,11 +103,12 @@ function logIn() {
         headerButton.textContent = "log out";
         nickName.textContent = form.elements[0].value;
         user = form.elements[0].value;
+        currentPage = 'main';
         changePage(mainPageHtml);
         showPhotoPosts(0, 10);
         eventsForLent();
         eventForLoadMore();
-        currentPage = 'main';
+        // addListeners();
         headerButton.style.visibility = '';
         addThePostHeader.style.visibility = 'visible';
         addThePostHeader.style.opacity = 100;
@@ -125,8 +129,13 @@ function showFileName() {
 }
 addThePostHeader.addEventListener('click', function () {
     let main = document.querySelector(".site-content");
-    changePage(addThePostHtml);
+    let date = new Date();
+    let dateFormat = ('0' + date.getDate()).slice(-2) + '.' +
+        ('0' + (date.getMonth() + 1)).slice(-2) + '.' +
+        date.getFullYear();
     currentPage = "add the post";
+    changePage(addThePostHtml);
+    document.querySelectorAll('p3')[2].textContent = dateFormat;
     addThePostHeader.style.visibility = 'hidden';
     headerButton.style.visibility = 'hidden';
 });
@@ -136,13 +145,14 @@ function sendPost() {
     let img = document.querySelector("img");
     let hashs;
     let idOfPost;
+    headerButton.textContent = 'log out';
     if (form.elements[2].value != null) {
         hashs = form.elements[2].value.split(/(?=#)/g);
     }
     do {
         idOfPost = Math.floor(Math.random() * (1000 - 1)) + 1;
     } while (localStorage.getItem(String(idOfPost)) != null);
-    idOfPost = String(idOfPost);
+    idOfPost = JSON.stringify(idOfPost);
     let photoPost = {
         id: idOfPost,
         author: nickName.textContent,
@@ -151,6 +161,7 @@ function sendPost() {
         description: form.elements[1].value,
         hashtags: hashs
     };
+    modul.addPhotoPost(photoPost);
     addThePostHeader.style.visibility = 'visible';
     headerButton.style.visibility = 'visible';
     currentPage = 'main';
@@ -158,6 +169,7 @@ function sendPost() {
     showPhotoPosts(0, 10);
     eventsForLent();
     eventForLoadMore();
+    // addListeners();
 };
 function savePost() {
     let form = document.querySelector("form");
@@ -166,7 +178,7 @@ function savePost() {
     }
     alert(form.elements[0].value);
     alert(hashs[0]);
-    editPhotoPost(idOfEditPost, {
+    editPhotoPost(JSON.stringify(idOfEditPost), {
         description: form.elements[0].value,
         hashtags: hashs
     });
@@ -177,6 +189,7 @@ function savePost() {
     showPhotoPosts(0, 10);
     eventsForLent();
     eventForLoadMore();
+    // addListeners();
 }
 function eventsForLent() {
     [].forEach.call(document.getElementsByClassName("delete"), function (item) {
@@ -197,7 +210,7 @@ function eventsForLent() {
             addThePostHeader.style.visibility = 'hidden';
             headerButton.style.visibility = 'hidden';
             changePage(editThePostHtml);
-            document.querySelector('img').src = modul.getPhotoPost(idOfEditPost).photoLink;
+            document.querySelector('img').src = modul.getPhotoPost(JSON.stringify(idOfEditPost)).photoLink;
         };
     });
     document.querySelector(".search").addEventListener('click', function () {

@@ -39,6 +39,7 @@ window.modul =
         i++;
         return posts;
       }, []);
+      // posts.reverse();
       if (typeof (skip) !== 'number' || typeof (top) !== 'number') {
         return [];
       }
@@ -84,7 +85,22 @@ window.modul =
       if (validatePhotoPost(photoPost)) {
         //photoPosts.push(photoPost);
         //photoPosts.sort(compareByDate);
+        let i = 0;
         localStorage.setItem(photoPost.id, JSON.stringify(photoPost));
+        let posts = Object.keys(localStorage).reduce((posts, k) => {
+          posts[i] = JSON.parse(localStorage.getItem(k), function (key, value) {
+            if (key == 'createdAt') return new Date(value);
+            return value;
+          });
+          i++;
+          return posts;
+        }, []);
+        posts.sort(compareByDate);
+        localStorage.clear();
+        posts.forEach(item => localStorage.setItem(JSON.stringify(item.id), JSON.stringify(item)));
+        /* alert(posts);
+         
+        */
         return true;
       }
       return false;
