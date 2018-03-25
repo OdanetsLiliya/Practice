@@ -39,7 +39,6 @@ window.modul =
         i++;
         return posts;
       }, []);
-      console.log(posts);
       if (typeof (skip) !== 'number' || typeof (top) !== 'number') {
         return [];
       }
@@ -54,14 +53,14 @@ window.modul =
             return item.author === filterConfig.author;
           });
         }
-
         if (filterConfig.createdAt) {
           posts = posts.filter(function (item) {
-            return Date.parse(item.createdAt) === Date.parse(filterConfig.createdAt);
+            return item.createdAt.getFullYear() === filterConfig.createdAt.getFullYear() &&
+              item.createdAt.getMonth() === filterConfig.createdAt.getMonth() &&
+              item.createdAt.getDate() === filterConfig.createdAt.getDate()
           });
         }
-
-        if (filterConfig.hashtags) {
+        if (filterConfig.hashtags && filterConfig.hashtags != "") {
           posts = posts.filter(function (postItem) {
             if (typeof (postItem.hashtags) === 'undefined') {
               return false;
