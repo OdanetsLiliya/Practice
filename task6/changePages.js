@@ -16,11 +16,11 @@ let logInPageHtml = " <form class='log-in'>\
 let mainPageHtml = " <div class='filter-area'>\
         <p3 class='text-type-comic'>search</p3>\
         <div class='flex-box' style='justify-content:space-around;'>\
-            <div class='input-area'>\
+            <form class='input-area'>\
                 <input class='filter-input' type='text' placeholder='name' />\
                 <input class='filter-input' type='text' placeholder='date' />\
                 <input class='filter-input' type='text' placeholder='hashtags' />\
-            </div>\
+            </form>\
             <button class='button search'></button>\
         </div>\
     </div>\
@@ -194,5 +194,14 @@ function kek() {
             document.querySelector('img').src = modul.getPhotoPost(idOfEditPost).photoLink;
         };
     });
-
+    document.querySelector(".search").addEventListener('click', function () {
+        form = document.querySelector('form');
+        let date = form.elements[1].value.split('.');
+        filterConfig = {
+            author: form.elements[0].value,
+            createdAt: new Date(parseInt(date[2], 10), parseInt(date[1], 10) - 1, parseInt(date[0], 10)),
+            hashtags: form.elements[2].value.split(/(?=#)/g)
+        }
+        showPhotoPosts(0, 10);
+    });
 }

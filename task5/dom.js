@@ -55,7 +55,6 @@ window.dom = (function () {
     }
     let getPhotoPosts = function (skip = 0, top = 10, filterConfig) {
         let photoPosts = modul.getPhotoPosts(skip, top, filterConfig);
-        console.log(photoPosts);
         photoPosts.forEach(item => { document.querySelector('.lent').insertBefore(makePhotoPost(item), document.querySelector('.load-more-button')) });
     }
     let editPhotoPost = function (id, photoPost) {
