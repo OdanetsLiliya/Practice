@@ -1,4 +1,3 @@
-//let user = null;
 let filterConfig = null;
 let user = null;
 window.dom = (function () {

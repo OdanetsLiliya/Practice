@@ -301,6 +301,9 @@ footer {
         width: 50px;
         font-size: 90%;
   }
+  .edit-img{
+      max-width: 180px;
+  }
 }
 @media screen and (max-height: 600px){
     .image{
@@ -308,6 +311,9 @@ footer {
         max-width: 250px;
     }
     .DD-area{
+        max-height: 180px;
+    }
+    .edit-img{
         max-height: 180px;
     }
 }
@@ -445,6 +451,19 @@ footer {
     height: 50px;
     width: 130px;
     border-radius: 5%;
+}
+.save-button{
+    background-image: url(image/save.png);
+    height: 50px;
+    width: 130px;
+    border-radius: 5%;
+    margin-top: 10px;
+}
+.edit-img{
+    width: 50vw;
+    max-width: 200px;
+    height: 55vw;
+    max-height: 220px;
 }
 textarea{
     resize: none;
