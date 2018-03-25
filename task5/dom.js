@@ -140,7 +140,7 @@ function removePhotoPost(id) {
     //}
     return false;
 }
-function lol() {
+function eventForLoadMore() {
     document.querySelector('.load-more-button').addEventListener('click', function () {
         let length = document.getElementsByClassName('post').length;
         let posts = modul.getPhotoPosts(0, localStorage.length, filterConfig);

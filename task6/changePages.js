@@ -82,16 +82,16 @@ function addListeners() {
             currentPage = 'main';
             changePage(mainPageHtml);
             showPhotoPosts(0, 10);
-            kek();
-            lol();
+            eventsForLent();
+            eventForLoadMore();
             headerButton.style.visibility = '';
         });
     }
 }
 
 showPhotoPosts(0, 10);
-kek();
-lol();
+eventsForLent();
+eventForLoadMore();
 addListeners();
 
 function logIn() {
@@ -102,8 +102,8 @@ function logIn() {
         user = form.elements[0].value;
         changePage(mainPageHtml);
         showPhotoPosts(0, 10);
-        kek();
-        lol();
+        eventsForLent();
+        eventForLoadMore();
         currentPage = 'main';
         headerButton.style.visibility = '';
         addThePostHeader.style.visibility = 'visible';
@@ -128,6 +128,7 @@ addThePostHeader.addEventListener('click', function () {
     changePage(addThePostHtml);
     currentPage = "add the post";
     addThePostHeader.style.visibility = 'hidden';
+    headerButton.style.visibility = 'hidden';
 });
 
 function sendPost() {
@@ -151,11 +152,12 @@ function sendPost() {
         hashtags: hashs
     };
     addThePostHeader.style.visibility = 'visible';
+    headerButton.style.visibility = 'visible';
     currentPage = 'main';
     changePage(mainPageHtml);
     showPhotoPosts(0, 10);
-    kek();
-    lol();
+    eventsForLent();
+    eventForLoadMore();
 };
 function savePost() {
     let form = document.querySelector("form");
@@ -169,12 +171,14 @@ function savePost() {
         hashtags: hashs
     });
     currentPage = 'main';
+    addThePostHeader.style.visibility = 'visible';
+    headerButton.style.visibility = 'visible';
     changePage(mainPageHtml);
     showPhotoPosts(0, 10);
-    kek();
-    lol();
+    eventsForLent();
+    eventForLoadMore();
 }
-function kek() {
+function eventsForLent() {
     [].forEach.call(document.getElementsByClassName("delete"), function (item) {
         item.onclick = function () {
             alert(item.closest(".post").id);
@@ -190,6 +194,8 @@ function kek() {
         item.onclick = function () {
             idOfEditPost = item.closest(".post").id;
             currentPage = 'edit post';
+            addThePostHeader.style.visibility = 'hidden';
+            headerButton.style.visibility = 'hidden';
             changePage(editThePostHtml);
             document.querySelector('img').src = modul.getPhotoPost(idOfEditPost).photoLink;
         };
