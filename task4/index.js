@@ -49,12 +49,12 @@ window.modul =
           filterConfig.hashtags && !validTypeOfArray(filterConfig.hashtags)) {
           return [];
         }
-        if (filterConfig.author) {
+        if (filterConfig.author && filterConfig.author != "") {
           posts = posts.filter(function (item) {
             return item.author === filterConfig.author;
           });
         }
-        if (filterConfig.createdAt) {
+        if (filterConfig.createdAt && filterConfig.createdAt != "Invalid Date") {
           posts = posts.filter(function (item) {
             return item.createdAt.getFullYear() === filterConfig.createdAt.getFullYear() &&
               item.createdAt.getMonth() === filterConfig.createdAt.getMonth() &&

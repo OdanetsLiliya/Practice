@@ -86,6 +86,7 @@ function addListeners() {
 };
 function homePage() {
     currentPage = 'main';
+    filterConfig = null;
     changePage(mainPageHtml);
     showPhotoPosts(0, 10);
     eventsForLent();
