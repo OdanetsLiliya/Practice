@@ -80,7 +80,12 @@ window.modul =
       // return photoPosts.find(item => item.id === id);
       return JSON.parse(localStorage.getItem(id));
     };
-
+    let addLike = function (id, name) {
+      post = getPhotoPost(id);
+      post.likes.push(name);
+      alert(post.likes[0]);
+      localStorage.setItem(id, JSON.stringify(post));
+    };
     let addPhotoPost = function (photoPost) {
       if (validatePhotoPost(photoPost)) {
         //photoPosts.push(photoPost);
@@ -159,6 +164,7 @@ window.modul =
 
     return {
       getPhotoPost,
+      addLike,
       getPhotoPosts,
       addPhotoPost,
       editPhotoPost,

@@ -27,8 +27,14 @@ window.dom = (function () {
         }
         if (user == null) {
             buttonArea.style.visibility = 'hidden';
+
         }
         buttonHeart.className = 'heart-shape';
+        if (photoPost.likes.length != 0 && user != null && photoPost.likes.findIndex((item) =>
+            user === JSON.parse(item)) != -1) {
+            buttonHeart.className = 'heart-shape red';
+            buttonHeart.style.backgroundColor = 'red';
+        }
         buttonArea.append(buttonAdd, buttonDel, buttonHeart);
         nickAndDate.className = 'flex-box';
         nickName.className = 'text-type-comic';
@@ -49,7 +55,6 @@ window.dom = (function () {
         return post;
     }
     let addPhotoPost = function (photoPost) {
-        console.log(photoPost);
         let lent = document.querySelector('.lent');
         lent.insertBefore(makePhotoPost(photoPost), lent.children[0]);
     }
@@ -66,7 +71,7 @@ window.dom = (function () {
         return false;
     }
     let removePhotoPost = function (id) {
-        let post = document.getElementById(id);
+        let post = document.getElementById(JSON.parse(id));
         if (post) {
             document.querySelector('.lent').removeChild(post);
             return true;

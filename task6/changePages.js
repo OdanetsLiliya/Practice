@@ -42,7 +42,7 @@ let addThePostHtml = "    <form class='add-the-post-form'>\
              <textarea class='textarea-input' type='text' maxlength='20' rows='3'></textarea>\
              <p3 class='text-type-comic'></p3>\
          </div>\
-         <button class='button send-button' type='button' onclick='sendPost()'></button>\
+         <button class='buttonS send-button' type='button' onclick='sendPost()'></button>\
      </form>";
 let editThePostHtml = "    <form class='add-the-post-form'>\
              <img src='' class='edit-img'>\
@@ -52,7 +52,7 @@ let editThePostHtml = "    <form class='add-the-post-form'>\
          <p3 class='text-type-comic'>Change hashtags:</p3>\
          <textarea class='textarea-input' type='text' maxlength='20' rows='3'></textarea>\
          </div>\
-     <button class='button save-button' type='button' onclick='savePost()'></button>\
+     <button class='buttonS save-button' type='button' onclick='savePost()'></button>\
  </form>";
 
 function changePage(htmlInfo) {
@@ -74,7 +74,7 @@ function addListeners() {
         addThePostHeader.style.visibility = 'hidden';
         headerButton.textContent = "log in";
         document.querySelector('h2.text-type-comic').textContent = '';
-        // showPhotoPosts(0, 10);
+        showPhotoPosts(0, 10);
     }
     //});
     //}
@@ -160,8 +160,10 @@ function sendPost() {
         createdAt: new Date(),
         photoLink: img.src,
         description: form.elements[1].value,
-        hashtags: hashs
+        hashtags: hashs,
+        likes: []
     };
+    alert(photoPost.likes);
     modul.addPhotoPost(photoPost);
     addThePostHeader.style.visibility = 'visible';
     headerButton.style.visibility = 'visible';
@@ -195,13 +197,18 @@ function savePost() {
 function eventsForLent() {
     [].forEach.call(document.getElementsByClassName("delete"), function (item) {
         item.onclick = function () {
-            alert(item.closest(".post").id);
-            removePhotoPost(item.closest(".post").id);
+            alert(typeof item.closest(".post").id);
+            removePhotoPost(JSON.stringify(item.closest(".post").id));
         };
     });
     [].forEach.call(document.querySelectorAll(".heart-shape"), function (item) {
         item.onclick = function () {
-            alert(item.closest(".post").id);
+            if (item.style.backgroundColor != 'red') {
+                item.className = 'heart-shape red';
+                item.style.backgroundColor = 'red';
+                alert(item.closest(".post").id);
+                modul.addLike(JSON.stringify(item.closest(".post").id), JSON.stringify(nickName.textContent));
+            }
         };
     });
     [].forEach.call(document.querySelectorAll(".add"), function (item) {
