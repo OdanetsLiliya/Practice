@@ -28,7 +28,7 @@ let mainPageHtml = " <div class='filter-area'>\
         <button class='load-more-button text-button' type='button'>load more</button>\
     </div>\
     <div class='filter-area'> </div>";
-let addThePostHtml = "    <form class='add-the-post-form'>\
+let addThePostHtml = "<form class='add-the-post-form'>\
          <div class='DD-area'  onchange='showFileName()'>\
              <label>\
                  <img src=''>\
@@ -100,16 +100,16 @@ eventForLoadMore();
 
 function logIn() {
     let form = document.querySelector("form");
-    if (users.find(item => item.name === form.elements[0].value && item.password === form.elements[1].value)) {
+    if (modul.checkLogIn(form.elements[0].value, form.elements[1].value)) {
         headerButton.textContent = "log out";
         nickName.textContent = form.elements[0].value;
         user = form.elements[0].value;
         currentPage = 'main';
+        modul.checkLogIn(form.elements[0].value, form.elements[1].value);
         changePage(mainPageHtml);
         showPhotoPosts(0, 10);
         eventsForLent();
         eventForLoadMore();
-        // addListeners();
         headerButton.style.visibility = '';
         addThePostHeader.style.visibility = 'visible';
         addThePostHeader.style.opacity = 100;
@@ -152,7 +152,7 @@ function sendPost() {
     }
     do {
         idOfPost = Math.floor(Math.random() * (1000 - 1)) + 1;
-    } while (localStorage.getItem(String(idOfPost)) != null);
+    } while (postsJson.findIndex(item => item.id === idOfPost) != -1);
     idOfPost = JSON.stringify(idOfPost);
     let photoPost = {
         id: idOfPost,
@@ -163,25 +163,22 @@ function sendPost() {
         hashtags: hashs,
         likes: []
     };
-    alert(photoPost.likes);
     modul.addPhotoPost(photoPost);
     addThePostHeader.style.visibility = 'visible';
     headerButton.style.visibility = 'visible';
     currentPage = 'main';
     changePage(mainPageHtml);
+    filterConfig = null;
     showPhotoPosts(0, 10);
     eventsForLent();
     eventForLoadMore();
-    // addListeners();
 };
 function savePost() {
     let form = document.querySelector("form");
     if (form.elements[1].value != null) {
         hashs = form.elements[1].value.split(/(?=#)/g);
     }
-    alert(form.elements[0].value);
-    alert(hashs[0]);
-    editPhotoPost(JSON.stringify(idOfEditPost), {
+    editPhotoPost(idOfEditPost, {
         description: form.elements[0].value,
         hashtags: hashs
     });
@@ -189,16 +186,16 @@ function savePost() {
     addThePostHeader.style.visibility = 'visible';
     headerButton.style.visibility = 'visible';
     changePage(mainPageHtml);
+    filterConfig = null;
     showPhotoPosts(0, 10);
     eventsForLent();
     eventForLoadMore();
-    // addListeners();
-}
+};
 function eventsForLent() {
     [].forEach.call(document.getElementsByClassName("delete"), function (item) {
         item.onclick = function () {
             alert(typeof item.closest(".post").id);
-            removePhotoPost(JSON.stringify(item.closest(".post").id));
+            removePhotoPost(item.closest(".post").id);
         };
     });
     [].forEach.call(document.querySelectorAll(".heart-shape"), function (item) {
@@ -207,7 +204,7 @@ function eventsForLent() {
                 item.className = 'heart-shape red';
                 item.style.backgroundColor = 'red';
                 alert(item.closest(".post").id);
-                modul.addLike(JSON.stringify(item.closest(".post").id), JSON.stringify(nickName.textContent));
+                modul.addLike(item.closest(".post").id, JSON.stringify(nickName.textContent));
             }
         };
     });
@@ -218,7 +215,7 @@ function eventsForLent() {
             addThePostHeader.style.visibility = 'hidden';
             headerButton.style.visibility = 'hidden';
             changePage(editThePostHtml);
-            document.querySelector('img').src = modul.getPhotoPost(JSON.stringify(idOfEditPost)).photoLink;
+            document.querySelector('img').src = modul.getPhotoPost(idOfEditPost).photoLink;
         };
     });
     document.querySelector(".search").addEventListener('click', function () {
@@ -230,5 +227,7 @@ function eventsForLent() {
             hashtags: form.elements[2].value.split(/(?=#)/g)
         }
         showPhotoPosts(0, 10);
+        eventsForLent();
+        eventForLoadMore();
     });
 }

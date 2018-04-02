@@ -88,19 +88,19 @@ header {
     box-shadow: inset 2px 2px 5px rgba(117, 4, 10, 0.98), 1px 1px 5px #C79191;   
 }
 .add,.add-header {
-    background-image: url(image/buttonWrite1.png);
+    background-image: url(./image/buttonWrite1.png);
     height: 35px;
     width: 35px;
     border-radius: 50%;
 }
 .search {
-    background-image: url(image/findButton.png); 
+    background-image: url(./image/findButton.png); 
     height: 35px;
     width: 35px;
     border-radius: 50%;
 }
 .delete {
-    background-image: url(image/deleteButton.png);
+    background-image: url(./image/deleteButton.png);
     margin-top: 10px;
     height: 35px;
     width: 35px;
@@ -464,7 +464,7 @@ footer {
     height: 100%;
 }
 .DD-area label{
-    background: url("image/input-file.png");
+    background: url("./image/input-file.png");
     background-position: center;
     opacity: 0.6;
     background-repeat: no-repeat;
@@ -478,13 +478,13 @@ footer {
     cursor: crosshair;
 }
 .send-button{
-    background-image: url(image/send.png);
+    background-image: url(./image/send.png);
     height: 50px;
     width: 130px;
     border-radius: 5%;
 }
 .save-button{
-    background-image: url(image/save.png);
+    background-image: url(./image/save.png);
     height: 50px;
     width: 130px;
     border-radius: 5%;

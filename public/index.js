@@ -1,21 +1,6 @@
-let users = [{
-  name: "lili",
-  password: "q"
-},
-{
-  name: "ivan",
-  password: "1234"
-},
-{
-  name: "alex",
-  password: "111111"
-}
-];
+let postsJson = [];
 window.modul =
   (function () {
-
-    //photoPosts.sort(compareByDate);
-
     function compareByDate(photoPostA, photoPostB) {
       return Date.parse(photoPostB.createdAt) - Date.parse(photoPostA.createdAt);
     }
@@ -30,16 +15,10 @@ window.modul =
     }
 
     let getPhotoPosts = function (skip, top, filterConfig) {
-      let i = 0;
-      let posts = Object.keys(localStorage).reduce((posts, k) => {
-        posts[i] = JSON.parse(localStorage.getItem(k), function (key, value) {
-          if (key == 'createdAt') return new Date(value);
-          return value;
-        });
-        i++;
-        return posts;
-      }, []);
-      // posts.reverse();
+      let posts = getRequest('server/data/data.json');
+      posts.reverse();
+      size = posts.length;
+      postsJson = posts;
       if (typeof (skip) !== 'number' || typeof (top) !== 'number') {
         return [];
       }
@@ -77,35 +56,24 @@ window.modul =
     };
 
     let getPhotoPost = function (id) {
-      // return photoPosts.find(item => item.id === id);
-      return JSON.parse(localStorage.getItem(id));
+      let posts = getRequest('server/data/data.json');
+      size = posts.size;
+      postsJson = posts;
+      if (posts) {
+        return posts.find(item => item.id === id);
+      }
     };
+
     let addLike = function (id, name) {
       post = getPhotoPost(id);
       post.likes.push(name);
-      alert(post.likes[0]);
-      localStorage.setItem(id, JSON.stringify(post));
+      postRequest('./changeData', postsJson);
     };
+
     let addPhotoPost = function (photoPost) {
       if (validatePhotoPost(photoPost)) {
-        //photoPosts.push(photoPost);
-        //photoPosts.sort(compareByDate);
-        let i = 0;
-        localStorage.setItem(photoPost.id, JSON.stringify(photoPost));
-        let posts = Object.keys(localStorage).reduce((posts, k) => {
-          posts[i] = JSON.parse(localStorage.getItem(k), function (key, value) {
-            if (key == 'createdAt') return new Date(value);
-            return value;
-          });
-          i++;
-          return posts;
-        }, []);
-        posts.sort(compareByDate);
-        localStorage.clear();
-        posts.forEach(item => localStorage.setItem(JSON.stringify(item.id), JSON.stringify(item)));
-        /* alert(posts);
-         
-        */
+        let xhr = new XMLHttpRequest();
+        postRequest('./sendPost', photoPost);
         return true;
       }
       return false;
@@ -122,19 +90,19 @@ window.modul =
           photoPost.photoLink && typeof (photoPost.photoLink) === 'string' && photoPost.photoLink.length !== 0) &&
         (typeof (photoPost.hashtags) === 'undefined' || validTypeOfArray(photoPost.hashtags)) &&
         (statusOfValidation ||
-          (photoPost.id && localStorage.getItem(photoPost.id)) === null
-          /*findIndex(item => item.id === photoPost.id) === -1*/ &&
-          typeof (photoPost.id) === 'string' &&
-          photoPost.createdAt && photoPost.createdAt instanceof Date &&
-          typeof (photoPost.author) === 'string' && photoPost.author.length !== 0 &&
-          (typeof (photoPost.likes) === 'undefined' || validTypeOfArray(photoPost.likes))
-        )) {
+          (photoPost.id && postsJson.findIndex(item => item.id === photoPost.id) === -1 &&
+            typeof (photoPost.id) === 'string' &&
+            photoPost.createdAt && photoPost.createdAt instanceof Date &&
+            typeof (photoPost.author) === 'string' && photoPost.author.length !== 0 &&
+            (typeof (photoPost.likes) === 'undefined' || validTypeOfArray(photoPost.likes))
+          ))) {
         return true;
       }
       return false;
     };
 
     let editPhotoPost = function (id, photoPost) {
+      let xhreq = new XMLHttpRequest();
       let photopostToChange = this.getPhotoPost(id);
       if (typeof (photopostToChange) === 'undefined' || !validatePhotoPost(photoPost, 'changes')) {
         return false;
@@ -148,26 +116,36 @@ window.modul =
       if (photoPost.hashtags) {
         photopostToChange.hashtags = photoPost.hashtags;
       }
-      localStorage.setItem(id, JSON.stringify(photopostToChange));
-      //photoPosts[photoPosts.findIndex(item => item.id === id)] = photopostToChange;
+      postRequest('./changeData', postsJson);
       return true;
     };
 
     let removePhotoPost = function (id) {
-      //let index = photoPosts.findIndex(item => item.id === id);
-      if (localStorage.getItem(id)) {
-        localStorage.removeItem(id)
+      if (this.getPhotoPost(id)) {
+        postsJson.splice(postsJson.findIndex(item => item.id == id), 1);
+        postRequest('./changeData', postsJson);
         return true;
       }
       return false;
     }
-
+    let checkLogIn = function (login, password) {
+      let user = {
+        name: login,
+        password: password
+      };
+      let users = getRequest('/server/data/users.json');
+      if (users.findIndex(item => item.name === user.name && item.password === user.password) !== -1) {
+        return true;
+      }
+      return false;
+    }
     return {
       getPhotoPost,
       addLike,
       getPhotoPosts,
       addPhotoPost,
       editPhotoPost,
-      removePhotoPost
+      removePhotoPost,
+      checkLogIn
     }
   })();
