@@ -15,7 +15,7 @@ window.modul =
     }
 
     let getPhotoPosts = function (skip, top, filterConfig) {
-      let posts = getRequest('server/data/data.json');
+      let posts = requests.getRequest('server/data/data.json');
       posts.reverse();
       size = posts.length;
       postsJson = posts;
@@ -56,7 +56,7 @@ window.modul =
     };
 
     let getPhotoPost = function (id) {
-      let posts = getRequest('server/data/data.json');
+      let posts = requests.getRequest('server/data/data.json');
       size = posts.size;
       postsJson = posts;
       if (posts) {
@@ -67,13 +67,13 @@ window.modul =
     let addLike = function (id, name) {
       post = getPhotoPost(id);
       post.likes.push(name);
-      postRequest('./changeData', postsJson);
+      requests.postRequest('./changeData', postsJson);
     };
 
     let addPhotoPost = function (photoPost) {
       if (validatePhotoPost(photoPost)) {
         let xhr = new XMLHttpRequest();
-        postRequest('./sendPost', photoPost);
+        requests.postRequest('./sendPost', photoPost);
         return true;
       }
       return false;
@@ -116,7 +116,7 @@ window.modul =
       if (photoPost.hashtags) {
         photopostToChange.hashtags = photoPost.hashtags;
       }
-      postRequest('./changeData', postsJson);
+      requests.postRequest('./changeData', postsJson);
       return true;
     };
 
@@ -133,7 +133,7 @@ window.modul =
         name: login,
         password: password
       };
-      let users = getRequest('/server/data/users.json');
+      let users = requests.getRequest('/server/data/users.json');
       if (users.findIndex(item => item.name === user.name && item.password === user.password) !== -1) {
         return true;
       }

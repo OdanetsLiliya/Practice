@@ -194,7 +194,6 @@ function savePost() {
 function eventsForLent() {
     [].forEach.call(document.getElementsByClassName("delete"), function (item) {
         item.onclick = function () {
-            alert(typeof item.closest(".post").id);
             removePhotoPost(item.closest(".post").id);
         };
     });
@@ -203,7 +202,6 @@ function eventsForLent() {
             if (item.style.backgroundColor != 'red') {
                 item.className = 'heart-shape red';
                 item.style.backgroundColor = 'red';
-                alert(item.closest(".post").id);
                 modul.addLike(item.closest(".post").id, JSON.stringify(nickName.textContent));
             }
         };
