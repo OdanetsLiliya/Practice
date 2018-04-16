@@ -76,46 +76,51 @@ function addListeners() {
         document.querySelector('h2.text-type-comic').textContent = '';
         showPhotoPosts(0, 10);
     }
-    //});
-    //}
-    //else if (currentPage == 'log in' || currentPage == 'add the post' || currentPage == 'edit post') {
-    /*document.querySelector('h1.text-type-mistral').addEventListener('click', function () {
-        
-    });*/
-    //}
 };
 function homePage() {
     currentPage = 'main';
     filterConfig = null;
     changePage(mainPageHtml);
-    showPhotoPosts(0, 10);
+    showPhotoPosts(0, 10).then(function () {
+        eventsForLent();
+        eventForLoadMore();
+    });
+    headerButton.style.visibility = '';
+};
+
+showPhotoPosts(0, 10).then(function () {
     eventsForLent();
     eventForLoadMore();
-    headerButton.style.visibility = '';
-}
-showPhotoPosts(0, 10);
-eventsForLent();
-eventForLoadMore();
-//addListeners();
+});
+
 
 function logIn() {
     let form = document.querySelector("form");
-    if (modul.checkLogIn(form.elements[0].value, form.elements[1].value)) {
-        headerButton.textContent = "log out";
-        nickName.textContent = form.elements[0].value;
-        user = form.elements[0].value;
-        currentPage = 'main';
-        modul.checkLogIn(form.elements[0].value, form.elements[1].value);
-        changePage(mainPageHtml);
-        showPhotoPosts(0, 10);
-        eventsForLent();
-        eventForLoadMore();
-        headerButton.style.visibility = '';
-        addThePostHeader.style.visibility = 'visible';
-        addThePostHeader.style.opacity = 100;
-    } else {
-        alert('wrong name or password');
-    }
+    let users = requests.getRequest('/server/data/users.json').then(function (users) {
+        let guest = {
+            name: form.elements[0].value,
+            password: form.elements[1].value
+        }
+        if (users.findIndex(item => item.name === guest.name && item.password === guest.password) !== -1) {
+            headerButton.textContent = "log out";
+            nickName.textContent = form.elements[0].value;
+            user = form.elements[0].value;
+            currentPage = 'main';
+            changePage(mainPageHtml);
+            showPhotoPosts(0, 10).then(function () {
+                eventsForLent();
+                eventForLoadMore();
+            });
+            headerButton.style.visibility = '';
+            addThePostHeader.style.visibility = 'visible';
+            addThePostHeader.style.opacity = 100;
+        } else {
+            alert('wrong name or password');
+        }
+
+    });
+
+
 }
 function showFileName() {
     let fr = new FileReader();
@@ -169,29 +174,34 @@ function sendPost() {
     currentPage = 'main';
     changePage(mainPageHtml);
     filterConfig = null;
-    showPhotoPosts(0, 10);
-    eventsForLent();
-    eventForLoadMore();
+    showPhotoPosts(0, 10).then(function () {
+        eventsForLent();
+        eventForLoadMore();
+    });
 };
 function savePost() {
     let form = document.querySelector("form");
     if (form.elements[1].value != null) {
         hashs = form.elements[1].value.split(/(?=#)/g);
     }
-    editPhotoPost(idOfEditPost, {
+    modul.editPhotoPost(idOfEditPost, {
         description: form.elements[0].value,
         hashtags: hashs
+    }).then(function () {
+        currentPage = 'main';
+        addThePostHeader.style.visibility = 'visible';
+        headerButton.style.visibility = 'visible';
+        changePage(mainPageHtml);
+        filterConfig = null;
+        showPhotoPosts(0, 10).then(function () {
+            eventsForLent();
+            eventForLoadMore();
+        });
     });
-    currentPage = 'main';
-    addThePostHeader.style.visibility = 'visible';
-    headerButton.style.visibility = 'visible';
-    changePage(mainPageHtml);
-    filterConfig = null;
-    showPhotoPosts(0, 10);
-    eventsForLent();
-    eventForLoadMore();
+
 };
 function eventsForLent() {
+    alert(document.getElementsByClassName("delete")[0]);
     [].forEach.call(document.getElementsByClassName("delete"), function (item) {
         item.onclick = function () {
             removePhotoPost(item.closest(".post").id);
@@ -213,7 +223,10 @@ function eventsForLent() {
             addThePostHeader.style.visibility = 'hidden';
             headerButton.style.visibility = 'hidden';
             changePage(editThePostHtml);
-            document.querySelector('img').src = modul.getPhotoPost(idOfEditPost).photoLink;
+            requests.getRequest('server/data/data.json').then(function (posts) {
+                let photopostToChange = modul.getPhotoPost(idOfEditPost, posts);
+                document.querySelector('img').src = photopostToChange.photoLink;
+            });
         };
     });
     document.querySelector(".search").addEventListener('click', function () {
@@ -224,8 +237,9 @@ function eventsForLent() {
             createdAt: new Date(parseInt(date[2], 10), parseInt(date[1], 10) - 1, parseInt(date[0], 10)),
             hashtags: form.elements[2].value.split(/(?=#)/g)
         }
-        showPhotoPosts(0, 10);
-        eventsForLent();
-        eventForLoadMore();
+        showPhotoPosts(0, 10).then(function () {
+            eventsForLent();
+            eventForLoadMore();
+        });
     });
 }

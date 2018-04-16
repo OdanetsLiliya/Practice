@@ -14,69 +14,70 @@ window.modul =
       return false;
     }
 
-    let getPhotoPosts = function (skip, top, filterConfig) {
-      let posts = requests.getRequest('server/data/data.json');
-      posts.reverse();
-      size = posts.length;
-      postsJson = posts;
-      if (typeof (skip) !== 'number' || typeof (top) !== 'number') {
-        return [];
-      }
-      if (filterConfig) {
-        if (filterConfig.author && (typeof (filterConfig.author) !== 'string' || filterConfig.author.length === 0) ||
-          filterConfig.createdAt && !filterConfig.createdAt instanceof Date ||
-          filterConfig.hashtags && !validTypeOfArray(filterConfig.hashtags)) {
-          return [];
-        }
-        if (filterConfig.author && filterConfig.author != "") {
-          posts = posts.filter(function (item) {
-            return item.author === filterConfig.author;
-          });
-        }
-        if (filterConfig.createdAt && filterConfig.createdAt != "Invalid Date") {
-          posts = posts.filter(function (item) {
-            return item.createdAt.getFullYear() === filterConfig.createdAt.getFullYear() &&
-              item.createdAt.getMonth() === filterConfig.createdAt.getMonth() &&
-              item.createdAt.getDate() === filterConfig.createdAt.getDate()
-          });
-        }
-        if (filterConfig.hashtags && filterConfig.hashtags != "") {
-          posts = posts.filter(function (postItem) {
-            if (typeof (postItem.hashtags) === 'undefined') {
-              return false;
+    getPhotoPosts = function (skip, top, filterConfig) {
+      return requests.getRequest("server/data/data.json")
+        .then(function (posts) {
+          posts.reverse();
+          size = posts.length;
+          if (typeof (skip) !== 'number' || typeof (top) !== 'number') {
+            return [];
+          }
+          if (filterConfig) {
+            if (filterConfig.author && (typeof (filterConfig.author) !== 'string' || filterConfig.author.length === 0) ||
+              filterConfig.createdAt && !filterConfig.createdAt instanceof Date ||
+              filterConfig.hashtags && !validTypeOfArray(filterConfig.hashtags)) {
+              return [];
             }
-            return filterConfig.hashtags.every(function (item) {
-              return postItem.hashtags.includes(item);
-            })
-          })
-        }
-      }
-      posts = posts.slice(skip, skip + top);
-      return posts;
+            if (filterConfig.author && filterConfig.author != "") {
+              posts = posts.filter(function (item) {
+                return item.author === filterConfig.author;
+              });
+            }
+            if (filterConfig.createdAt && filterConfig.createdAt != "Invalid Date") {
+              posts = posts.filter(function (item) {
+                return item.createdAt.getFullYear() === filterConfig.createdAt.getFullYear() &&
+                  item.createdAt.getMonth() === filterConfig.createdAt.getMonth() &&
+                  item.createdAt.getDate() === filterConfig.createdAt.getDate()
+              });
+            }
+            if (filterConfig.hashtags && filterConfig.hashtags != "") {
+              posts = posts.filter(function (postItem) {
+                if (typeof (postItem.hashtags) === 'undefined') {
+                  return false;
+                }
+                return filterConfig.hashtags.every(function (item) {
+                  return postItem.hashtags.includes(item);
+                })
+              })
+            }
+          }
+          posts = posts.slice(skip, skip + top);
+          return posts;
+        });
     };
 
-    let getPhotoPost = function (id) {
-      let posts = requests.getRequest('server/data/data.json');
-      size = posts.size;
-      postsJson = posts;
+    let getPhotoPost = function (id, posts) {
+      //let posts = requests.getRequest('server/data/data.json');
       if (posts) {
         return posts.find(item => item.id === id);
       }
     };
 
     let addLike = function (id, name) {
-      post = getPhotoPost(id);
-      post.likes.push(name);
-      requests.postRequest('./changeData', postsJson);
+      return requests.getRequest('server/data/data.json').then(function (posts) {
+        let post = getPhotoPost(id, posts);
+        post.likes.push(name);
+        return requests.postRequest('./changeData', posts);
+      });
     };
 
     let addPhotoPost = function (photoPost) {
-      if (validatePhotoPost(photoPost)) {
-        let xhr = new XMLHttpRequest();
-        requests.postRequest('./sendPost', photoPost);
-        return true;
-      }
-      return false;
+      return new Promise(function (resolve, reject) {
+        if (validatePhotoPost(photoPost)) {
+          return requests.postRequest('./sendPost', photoPost);
+        }
+        reject(false);
+      });
     };
 
     let validatePhotoPost = function (photoPost, statusOfValidation) {
@@ -102,50 +103,38 @@ window.modul =
     };
 
     let editPhotoPost = function (id, photoPost) {
-      let xhreq = new XMLHttpRequest();
-      let photopostToChange = this.getPhotoPost(id);
-      if (typeof (photopostToChange) === 'undefined' || !validatePhotoPost(photoPost, 'changes')) {
-        return false;
-      }
-      if (photoPost.description) {
-        photopostToChange.description = photoPost.description;
-      }
-      if (photoPost.photoLink) {
-        photopostToChange.photoLink = photoPost.photoLink;
-      }
-      if (photoPost.hashtags) {
-        photopostToChange.hashtags = photoPost.hashtags;
-      }
-      requests.postRequest('./changeData', postsJson);
-      return true;
+      return requests.getRequest('server/data/data.json').then(function (posts) {
+        let photopostToChange = getPhotoPost(id, posts);
+        if (typeof (photopostToChange) === 'undefined' || !validatePhotoPost(photoPost, 'changes')) {
+          return false;
+        } else {
+          if (photoPost.description) {
+            photopostToChange.description = photoPost.description;
+          }
+          if (photoPost.photoLink) {
+            photopostToChange.photoLink = photoPost.photoLink;
+          }
+          if (photoPost.hashtags) {
+            photopostToChange.hashtags = photoPost.hashtags;
+          }
+          return requests.postRequest('./changeData', posts);
+        }
+      });
     };
 
     let removePhotoPost = function (id) {
-      if (this.getPhotoPost(id)) {
-        postsJson.splice(postsJson.findIndex(item => item.id == id), 1);
-        postRequest('./changeData', postsJson);
-        return true;
-      }
-      return false;
+      return requests.getRequest('server/data/data.json').then(function (posts) {
+        posts.splice(posts.findIndex(item => item.id == id), 1);
+        return requests.postRequest('./changeData', posts);
+      });
     }
-    let checkLogIn = function (login, password) {
-      let user = {
-        name: login,
-        password: password
-      };
-      let users = requests.getRequest('/server/data/users.json');
-      if (users.findIndex(item => item.name === user.name && item.password === user.password) !== -1) {
-        return true;
-      }
-      return false;
-    }
+
     return {
       getPhotoPost,
       addLike,
       getPhotoPosts,
       addPhotoPost,
       editPhotoPost,
-      removePhotoPost,
-      checkLogIn
+      removePhotoPost
     }
   })();

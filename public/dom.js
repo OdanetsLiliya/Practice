@@ -61,8 +61,15 @@ window.dom = (function () {
         lent.insertBefore(makePhotoPost(photoPost), lent.children[0]);
     }
     let getPhotoPosts = function (skip = 0, top = 10, filterConfig) {
-        let photoPosts = modul.getPhotoPosts(skip, top, filterConfig);
-        photoPosts.forEach(item => { document.querySelector('.lent').insertBefore(makePhotoPost(item), document.querySelector('.load-more-button')) });
+        return modul.getPhotoPosts(skip, top, filterConfig)
+            .then(function (posts) {
+                posts.forEach(item => {
+                    document
+                        .querySelector('.lent')
+                        .insertBefore(makePhotoPost(item), document.querySelector('.load-more-button'))
+                });
+                return posts.length;
+            });
     }
     /* let editPhotoPost = function (id, photoPost) {
          let post = document.getElementById(id);
@@ -91,47 +98,46 @@ window.dom = (function () {
     return {
         addPhotoPost,
         getPhotoPosts,
-        editPhotoPost,
+        //editPhotoPost,
         removePhotoPost,
         deleteAllPosts
     }
 })();
 function showPhotoPosts(skip, top) {
     dom.deleteAllPosts();
-    dom.getPhotoPosts(skip, top, filterConfig);
-    posts = modul.getPhotoPosts(0, size, filterConfig).length;
-    //if (posts === 0) {
-    //    lent.innerHTML = 'No such posts';
-    //}
-    if (skip + top >= posts) {
-        document.querySelector('.load-more-button').style.visibility = 'hidden';
-    } else {
-        document.querySelector('.load-more-button').style.visibility = 'visible';
-    }
+    let length = modul.getPhotoPosts(skip + top, 10, filterConfig);
+    return dom.getPhotoPosts(skip, top, filterConfig)
+        .then(function () {
+            length.then(function (item) {
+                if (item.length > 0) {
+                    document.querySelector('.load-more-button').style.visibility = 'visible';
+                    return true;
+                }
+                else {
+                    document.querySelector('.load-more-button').style.visibility = 'hidden';
+                    return false;
+                }
+            });
+        });
 }
+
 function addPhotoPost(photoPost) {
     if (user != null) {
         if (modul.addPhotoPost(photoPost)) {
             dom.addPhotoPost(photoPost);
-            // dom.deleteAllPosts();
-            // showPhotoPosts(skip, top, filterConfig);
             return true;
         }
     }
     return false;
 }
-function editPhotoPost(id, photoPost) {
-    //if (modul.getPhotoPost(id).author === user) {
+/*function editPhotoPost(id, photoPost) {
     if (modul.editPhotoPost(id, photoPost)) {
-        // dom.editPhotoPost(id, photoPost);
         return true;
     }
-    //}
     return false;
-}
+}*/
 function removePhotoPost(id) {
-    //if (modul.getPhotoPost(id).author == user) {
-    if (modul.removePhotoPost(id)) {
+    modul.removePhotoPost(id).then(function () {
         if (dom.removePhotoPost(id)) {
             let length = document.getElementsByClassName('post').length;
             let posts = modul.getPhotoPosts(0, photoPosts.length, filterConfig);
@@ -141,21 +147,19 @@ function removePhotoPost(id) {
             if (length + 1 >= posts.length) {
                 document.querySelector('.load-more-button').style.visibility = 'hidden';
             }
+            return true;
         }
-        return true;
-    }
-    //}
-    return false;
+        return false;
+    });
 }
 function eventForLoadMore() {
     document.querySelector('.load-more-button').addEventListener('click', function () {
         let length = document.getElementsByClassName('post').length;
-        let posts = modul.getPhotoPosts(0, size, filterConfig);
-        if (posts.length > length) {
-            dom.getPhotoPosts(length, 10, filterConfig);
-            if (posts.length <= length + 10) {
-                document.querySelector('.load-more-button').style.visibility = 'hidden';
-            }
-        }
+        dom.getPhotoPosts(length, 10, filterConfig)
+            .then(function (response) {
+                if (response <= length + 10) {
+                    document.querySelector('.load-more-button').style.visibility = 'hidden';
+                }
+            });
     });
 }
