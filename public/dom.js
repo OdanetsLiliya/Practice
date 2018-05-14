@@ -1,11 +1,9 @@
-const filterConfig = null;
-const user = null;
-const photoPosts = postsJson;
+let filterConfig = null;
+let user = null;
+// const photoPosts = postsJson;
 let size;
 window.dom = (function () {
   document.querySelector('.load-more-button').style.visibility = 'hidden';
-  const userName = document.querySelector('h2');
-  const logButton = document.querySelector('.log-button');
   const makePhotoPost = function (photoPost) {
     const post = document.createElement('div');
     const image = document.createElement('img');
@@ -23,7 +21,7 @@ window.dom = (function () {
     image.className = 'image';
     image.src = photoPost.photoLink;
     buttonArea.className = 'button-area';
-    if (photoPost.author == user) {
+    if (photoPost.author === user) {
       buttonAdd.className = 'button add';
       buttonDel.className = 'button delete';
     }
@@ -32,7 +30,7 @@ window.dom = (function () {
     }
     buttonHeart.className = 'heart-shape';
     if (photoPost.likes/* .length != 0 */ && user != null && photoPost.likes.findIndex(item =>
-      user === JSON.parse(item)) != -1) {
+      user === item) !== -1) {
       buttonHeart.className = 'heart-shape red';
       buttonHeart.style.backgroundColor = 'red';
     }
@@ -41,9 +39,10 @@ window.dom = (function () {
     nickName.className = 'text-type-comic';
     nickName.innerHTML = photoPost.author;
     date.className = 'text-type-comic';
-    date.innerHTML = `${('0' + photoPost.createdAt.getDate()).slice(-2)}.${
-      ('0' + (photoPost.createdAt.getMonth() + 1)).slice(-2)}.${
-      photoPost.createdAt.getFullYear()}`;
+    const myDate = new Date(photoPost.createdAt);
+    date.innerHTML = `${('0' + myDate.getDate()).slice(-2)}.${
+      ('0' + (myDate.getMonth() + 1)).slice(-2)}.${
+      myDate.getFullYear()}`;
     tags.className = 'text-type-comic';
     tags.innerHTML = photoPost.hashtags.join(' ');
     imgAndButtons.className = 'flex-box';
@@ -56,28 +55,17 @@ window.dom = (function () {
     return post;
   };
   const addPhotoPost = function (photoPost) {
-    const lent = document.querySelector('.lent');
-    lent.insertBefore(makePhotoPost(photoPost), lent.children[0]);
+    return requests.postRequest('./addPost', null, null, photoPost)
+      .catch(err => console.log('Error in add: ' + err));
   };
-  const getPhotoPosts = function (skip = 0, top = 10, filterConfig) {
-    return modul.getPhotoPosts(skip, top, filterConfig)
-      .then((posts) => {
-        posts.forEach((item) => {
-          document
-            .querySelector('.lent')
-            .insertBefore(makePhotoPost(item), document.querySelector('.load-more-button'));
-        });
-        return posts.length;
-      });
+  const getPhotoPost = function (id) {
+    return requests.getRequest('./getPost', id)
+      .catch(err => console.log('Error in getPost: ' + err));
   };
-  /* let editPhotoPost = function (id, photoPost) {
-         let post = document.getElementById(id);
-         if (post) {
-             document.querySelector('.lent').replaceChild(makePhotoPost(modul.getPhotoPost(id)), post);
-             return true;
-         }
-         return false;
-     } */
+  const editPhotoPost = function (id, photoPost) {
+    return requests.putRequest('./editPost', id, photoPost)
+      .catch(err => console.log('Error in edit: ' + err));
+  };
   const removePhotoPost = function (id) {
     const post = document.getElementById(JSON.parse(id));
     if (post) {
@@ -86,6 +74,7 @@ window.dom = (function () {
     }
     return false;
   };
+
   const deleteAllPosts = function () {
     let items = document.getElementsByClassName('post');
     items = Array.prototype.slice.call(items);
@@ -96,30 +85,32 @@ window.dom = (function () {
   };
   return {
     addPhotoPost,
-    getPhotoPosts,
-    // editPhotoPost,
+    editPhotoPost,
+    getPhotoPost,
+    makePhotoPost,
     removePhotoPost,
     deleteAllPosts,
   };
 }());
 function showPhotoPosts(skip, top) {
-  dom.deleteAllPosts();
-  const length = modul.getPhotoPosts(skip + top, 10, filterConfig);
-  return dom.getPhotoPosts(skip, top, filterConfig)
-    .then(() => {
-      length.then((item) => {
-        if (item.length > 0) {
-          document.querySelector('.load-more-button').style.visibility = 'visible';
-          return true;
-        }
-
+  return requests.postRequest('./getPosts', skip, top + 1, filterConfig)
+    .then((posts) => {
+      posts = JSON.parse(posts);
+      const loadMoreBttn = document.querySelector('.load-more-button');
+      if (posts.length > 10) {
+        loadMoreBttn.style.visibility = 'visible';
+        posts.pop();
+      } else {
         document.querySelector('.load-more-button').style.visibility = 'hidden';
-        return false;
+      }
+      posts.forEach((item) => {
+        document.querySelector('.lent').insertBefore(dom.makePhotoPost(item), loadMoreBttn);
       });
-    });
+    })
+    .catch(err => console.log('Error in show: ' + err));
 }
 
-function addPhotoPost(photoPost) {
+/* function addPhotoPost(photoPost) {
   if (user != null) {
     if (modul.addPhotoPost(photoPost)) {
       dom.addPhotoPost(photoPost);
@@ -127,7 +118,7 @@ function addPhotoPost(photoPost) {
     }
   }
   return false;
-}
+} */
 /* function editPhotoPost(id, photoPost) {
     if (modul.editPhotoPost(id, photoPost)) {
         return true;
@@ -135,29 +126,31 @@ function addPhotoPost(photoPost) {
     return false;
 } */
 function removePhotoPost(id) {
-  modul.removePhotoPost(id).then(() => {
-    if (dom.removePhotoPost(id)) {
-      const { length } = document.getElementsByClassName('post');
-      const posts = modul.getPhotoPosts(0, photoPosts.length, filterConfig);
-      if (length < posts.length && length < 10) {
-        dom.addPhotoPost(posts[length]);
+  return requests.deleteRequest('./deletePost', id)
+    .then(() => new Promise((succeed, fail) => {
+      if (dom.removePhotoPost(id)) {
+        const { length } = document.getElementsByClassName('post');
+        succeed(length);
+      } else {
+        fail(new Error('Post was not deleted from dom'));
       }
-      if (length + 1 >= posts.length) {
-        document.querySelector('.load-more-button').style.visibility = 'hidden';
-      }
-      return true;
-    }
-    return false;
-  });
+    }))
+    .then(length => showPhotoPosts(length, 1))
+    .catch(err => console.log('Error in removePhotoPost(): ' + err));
 }
 function eventForLoadMore() {
   document.querySelector('.load-more-button').addEventListener('click', () => {
     const { length } = document.getElementsByClassName('post');
-    dom.getPhotoPosts(length, 10, filterConfig)
-      .then((response) => {
-        if (response <= length + 10) {
-          document.querySelector('.load-more-button').style.visibility = 'hidden';
-        }
-      });
+    showPhotoPosts(length, 10)
+      // .then((response) => {
+      //   if (response <= length + 10) {
+      //     document.querySelector('.load-more-button').style.visibility = 'hidden';
+      //   }
+      // });
+      .catch(err => console.log('Error in loadMore: ' + err));
   });
 }
+window.nextId = (() => {
+  let id = 1;
+  return () => id++;
+})();
